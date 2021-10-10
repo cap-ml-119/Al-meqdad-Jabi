@@ -21,21 +21,21 @@ def delete(task_id):
     return jsonify(result)"""
 
 
-@app.route("/api/v1/todo", methods=['UPDATE'])
-def update(task_id):
-    data = request.get_json()
-    print(data)
+@app.route("/api/v1/todo/<Data_ID>", methods=['PUT'])
+def update(Data_ID):
+    Test = db_helper.Get_Data()
     try:
-        if "status" in data:
-            db_helper.update_status_entry(task_id, data["status"])
-            result = {'success': True, 'response': 'Status Updated'}
-        elif "description" in data:
-            db_helper.update_task_entry(task_id, data["description"])
-            result = {'success': True, 'response': 'Task Updated'}
-        else:
-            result = {'success': True, 'response': 'Nothing Updated'}
-    except:
-        result = {'success': False, 'response': 'Something went wrong'}
+        data = request.get_json()
+        db_helper.update_data(Data_ID, data["description"], data["status"])
+        result = {
+            "success": 200,
+            "response": "Data was updated succefully"
+        }
+    except Exception as err:
+        result = {
+            'status': 404,
+            'response': str(err)
+        }
 
     return jsonify(result)
 
@@ -55,6 +55,23 @@ def create():
             'response': str(Err)
         }
     return jsonify(result)
+
+
+@app.route("/api/v1/todo/", methods=["GET"])
+def GetAllData():
+    try:
+        result = db_helper.Get_Data()
+        items = {
+            "status": 200,
+            "response": result
+        }
+
+    except Exception:
+        items = {
+            'status': 404,
+            "response": str(Exception)
+        }
+    return jsonify(items)
 
 
 @app.route("/")
