@@ -9,12 +9,12 @@ from typing import Any
 # Creates
 
 
-def get_json_data(obj):
+def GetData(JsonObject):
     tempData = []
-    obj_keys = obj.keys()
+    Object = JsonObject.keys()
 
-    for key in obj_keys:
-        tempData.append(obj[key])
+    for key in Object:
+        tempData.append(JsonObject[key])
 
     return tempData
 
@@ -53,7 +53,7 @@ def ModelSP():
     """
     json: Any = request.get_json()
     result = {
-        "Prediction": model.predict([get_json_data(json)])[0][0]
+        "Prediction": model.predict([GetData(json)])[0][0]
     }
 
     return jsonify(result)
