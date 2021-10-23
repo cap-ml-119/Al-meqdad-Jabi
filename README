@@ -1,0 +1,25 @@
+#flask prediction application
+
+short summary: This application is mainly made to predict using a pickled model on your hard disk, using apis.
+
+endpoint line:
+/api/v1/SinglePrediction
+
+response:
+{Prediction,status:200}
+
+-A POST request should contain the following documinations:
+        'season':
+            type:int,
+        'weather':
+            tpye:number,
+        "temp":
+            type:number,
+        'humidity': 
+            type=number,
+        'windspeed': 
+            type=number,
+        'hour': 
+            type=number,
+        'day': 
+            type=number,
