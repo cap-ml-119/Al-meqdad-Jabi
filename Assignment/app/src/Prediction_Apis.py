@@ -1,10 +1,10 @@
 from flask import request, jsonify, Blueprint
-import math
 import pickle
-import numpy as np
 import pandas as pd
 from flask_expects_json import expects_json
 from typing import Any
+from io import StringIO
+from werkzeug.wrappers import Response
 
 # Creates
 
@@ -17,6 +17,14 @@ def GetData(JsonObject):
         tempData.append(JsonObject[key])
 
     return tempData
+
+
+def StringifyData(PPD_DF):
+    Data = []
+    for X in PPD_DF:
+        Data.append(str(X[0])+"\n")
+
+    return Data
 
 
 PredictionApi: Blueprint = Blueprint(
@@ -55,5 +63,26 @@ def ModelSP():
     result = {
         "Prediction": model.predict([GetData(json)])[0][0]
     }
-
     return jsonify(result)
+
+
+@PredictionApi.route('/PatchPrediction', methods=['POST'])
+def upload_file():
+    try:
+
+        if 'Test_File' not in request.files:
+            raise Exception("No File attached")
+        Patch_Prediction_File = request.files['Test_File']
+        PPF_DF = pd.read_csv(
+            StringIO(Patch_Prediction_File.stream.read().decode('utf-8')))
+        Predictions = model.predict(PPF_DF)
+
+        response = Response(StringifyData(
+            Predictions), mimetype='text/csv')
+
+    except Exception:
+        response = {
+            'status': 400,
+            "response": "Something went wrong"
+        }
+    return response
