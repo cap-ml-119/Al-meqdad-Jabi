@@ -52,7 +52,7 @@ with open('./app/src/Models/model.sav', 'rb') as handle:
 
 @PredictionApi.route('/SinglePrediction', methods=['POST'])
 @expects_json(Single_Prediction_JsonSchema)
-def ModelSP():
+def SinglePrediction():
     """[This api purpose is to predict a single line
     of data entered by the use through the json schema we created]
 
@@ -67,7 +67,7 @@ def ModelSP():
 
 
 @PredictionApi.route('/PatchPrediction', methods=['POST'])
-def upload_file():
+def PatchPrediction():
     try:
 
         if 'Test_File' not in request.files:
