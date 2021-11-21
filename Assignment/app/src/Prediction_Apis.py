@@ -9,28 +9,28 @@ from werkzeug.wrappers import Response
 # Creates
 
 
-def GetData(JsonObject):
-    tempData = []
-    Object = JsonObject.keys()
+def Get_Data(Json_Object):
+    temp_Data = []
+    Object = Json_Object.keys()
 
     for key in Object:
-        tempData.append(JsonObject[key])
+        temp_Data.append(Json_Object[key])
 
-    return tempData
+    return temp_Data
 
 
-def StringifyData(PPD_DF):
+def StringifyData(Ppddf):
     Data = []
-    for X in PPD_DF:
+    for X in Ppddf:
         Data.append(str(X[0])+"\n")
 
     return Data
 
 
-PredictionApi: Blueprint = Blueprint(
-    'PredictionApi', __name__, url_prefix='/api/v1')
+Prediction_Apis: Blueprint = Blueprint(
+    'Prediction_Apis', __name__, url_prefix='/api/v1')
 
-Single_Prediction_JsonSchema = {
+Single_Prediction_Jsonschema = {
     "type": "object",
     "properties": {
         'season': {"type": "number"},
@@ -50,9 +50,9 @@ with open('./app/src/Models/model.sav', 'rb') as handle:
     model = pickle.load(handle)
 
 
-@PredictionApi.route('/SinglePrediction', methods=['POST'])
+@Prediction_Apis.route('/Single_Prediction', methods=['POST'])
 @expects_json(Single_Prediction_JsonSchema)
-def SinglePrediction():
+def Single_Prediction():
     """[This api purpose is to predict a single line
     of data entered by the use through the json schema we created]
 
@@ -61,19 +61,19 @@ def SinglePrediction():
     """
     json: Any = request.get_json()
     result = {
-        "Prediction": model.predict([GetData(json)])[0][0]
+        "Prediction": model.predict([Get_Data(json)])[0][0]
     }
     return jsonify(result)
 
 
-@PredictionApi.route('/PatchPrediction', methods=['POST'])
-def PatchPrediction():
+@Prediction_Apis.route('/Patch_Prediction', methods=['POST'])
+def Patch_Prediction():
     try:
 
         if 'Test_File' not in request.files:
             raise Exception("No File attached")
         Patch_Prediction_File = request.files['Test_File']
-        PPF_DF = pd.read_csv(
+        Ppddf = pd.read_csv(
             StringIO(Patch_Prediction_File.stream.read().decode('utf-8')))
         Predictions = model.predict(PPF_DF)
 
