@@ -27,8 +27,8 @@ def StringifyData(Ppddf):
     return Data
 
 
-Prediction_Apis: Blueprint = Blueprint(
-    'Prediction_Apis', __name__, url_prefix='/api/v1')
+Prediction_Api: Blueprint = Blueprint(
+    'Prediction_Api', __name__, url_prefix='/api/v1')
 
 Single_Prediction_Jsonschema = {
     "type": "object",
